@@ -4,7 +4,8 @@
 
 <script>
 export default {
-   el:"#app"
+  //组件的名字
+   name:"app"
 }
 </script>
 
