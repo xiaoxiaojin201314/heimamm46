@@ -18,11 +18,11 @@ Vue.use(VueRouter);
 // 创建路由对象
 const router = new VueRouter({
   //路由规则
-  routes:[
+  routes: [
     {
       //登陆
-      path:'/login',
-      component:login
+      path: '/login',
+      component: login
     }
   ]
 });
