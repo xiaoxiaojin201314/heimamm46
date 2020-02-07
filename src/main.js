@@ -8,6 +8,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //// 注册 Element-ui
 Vue.use(ElementUI)
+//导入全局样式
+import './style/bass.css'
 
 
 Vue.config.productionTip = false

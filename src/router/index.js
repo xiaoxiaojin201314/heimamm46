@@ -17,10 +17,14 @@ Vue.use(VueRouter);
 
 // 创建路由对象
 const router = new VueRouter({
-  routes:[{
-    path:'/login',
-    component:login
-  }]
+  //路由规则
+  routes:[
+    {
+      //登陆
+      path:'/login',
+      component:login
+    }
+  ]
 });
 
 // 暴露出去
