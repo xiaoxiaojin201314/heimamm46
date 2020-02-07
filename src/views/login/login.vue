@@ -1,11 +1,10 @@
 <template>
-   <router-view></router-view>
+  <div>我是一个登陆组件</div>
 </template>
 
 <script>
 export default {
-  //组件的名字
-   name:"app"
+   name:"login"
 }
 </script>
 
