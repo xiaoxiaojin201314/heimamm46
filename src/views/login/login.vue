@@ -12,13 +12,13 @@
       </div>
 
       <!-- 表单 -->
-      <el-form ref="form" :model="loginForm" label-width="43px">
+      <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="43px">
         <!-- 手机号 -->
         <el-form-item>
           <el-input prefix-icon="el-icon-user" placeholder="请输入手机号" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
             prefix-icon="el-icon-lock"
             show-password
@@ -27,7 +27,7 @@
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item>
+        <el-form-item prop="loginCode">
           <el-row>
             <el-col :span="17">
               <el-input
@@ -36,7 +36,7 @@
                 v-model="loginForm.loginCode"
               ></el-input>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="7" class="code-col">
               <img class="loginCode" src="../../assets/login_captcha.png" alt />
             </el-col>
           </el-row>
@@ -51,7 +51,7 @@
         </el-form-item>
         <!-- 底部按钮 -->
         <el-form-item>
-          <el-button type="primary" class="my-btn">登录</el-button>
+          <el-button type="primary" class="my-btn" @click="submitForm('loginForm')">登录</el-button>
           <el-button type="primary" class="my-btn">注册</el-button>
         </el-form-item>
       </el-form>
@@ -71,8 +71,30 @@ export default {
         passwprd: "",
         loginCode: "",
         isChecked: false
+      },
+      rules: {
+        password: [
+          { required: true, message: "密码不能为空", trigger: "blur" },
+          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+        ],
+        loginCode: [
+          { required: true, message: "验证码不能为空", trigger: "blur" },
+          { min: 4, max: 4, message: "长度为 4 个字符", trigger: "blur" }
+        ]
       }
     };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$message.success("验证成功!");
+        } else {
+          this.$message.error("验证失败!");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>
@@ -125,6 +147,10 @@ export default {
         font-size: 21px;
         margin-left: 12px;
       }
+    }
+    //验证码的提示高度
+    .code-col {
+      height: 40.8px;
     }
 
     // 验证码图片
