@@ -43,8 +43,13 @@
         </el-form-item>
         <!-- 用户协议 -->
         <el-form-item>
-          <el-checkbox v-model="loginForm.isChecked">我已阅读并同意</el-checkbox>
+          <el-checkbox v-model="loginForm.isChecked">
+            我已阅读并同意
+            <el-link type="primary">用户协议</el-link>和
+            <el-link type="primary">隐私条款</el-link>
+          </el-checkbox>
         </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="onSubmit">登录</el-button>
           <el-button>取消</el-button>
@@ -126,6 +131,14 @@ export default {
     .loginCode {
       width: 100%;
       height: 40.8px;
+    }
+  }
+  // 协议区域
+  .el-checkbox {
+    display: flex;
+    align-items: center;
+    .el-checkbox__label {
+      display: flex;
     }
   }
 }
