@@ -148,10 +148,6 @@ export default {
         margin-left: 12px;
       }
     }
-    //验证码的提示高度
-    .code-col {
-      height: 40.8px;
-    }
 
     // 验证码图片
     .loginCode {
@@ -164,6 +160,11 @@ export default {
       width: 100%;
       margin-bottom: 26px;
       margin-left: 0px;
+    }
+
+    //验证码的提示高度
+    .code-col {
+      height: 40.8px;
     }
   }
   // 协议区域
