@@ -11,7 +11,29 @@
         <span class="sub-title">用户登录</span>
       </div>
 
-      <!-- 输入框 -->
+      <!-- 表单 -->
+      <el-form ref="form" :model="loginForm" label-width="43px">
+        <!-- 手机号 -->
+            <el-form-item>
+                <el-input prefix-icon="el-icon-user" placeholder="请输入手机号" v-model="loginForm.phone"></el-input>
+            </el-form-item>
+            <!-- 密码 -->
+            <el-form-item>
+                <el-input prefix-icon="el-icon-lock" show-password placeholder="请输入密码" v-model="loginForm.password"></el-input>
+            </el-form-item>
+            <!-- 验证码 -->
+            <el-form-item>
+                <el-input prefix-icon="el-icon-key" placeholder="请输入验证码" v-model="loginForm.loginCode"></el-input>
+            </el-form-item>
+            <!-- 用户协议 -->
+            <el-form-item>
+                <el-checkbox v-model="loginForm.isChecked">是否同意用户协议</el-checkbox>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">登录</el-button>
+                <el-button>取消</el-button>
+            </el-form-item>
+        </el-form>
       
     </div>
     <!-- 右边图片 -->
@@ -22,6 +44,16 @@
 <script>
 export default {
   name: "login",
+  data() {
+    return {
+      loginForm:{
+        phone:"",
+        passwprd:"",
+        loginCode:"",
+        isChecked:false
+      }
+    }
+  },
  
 };
 </script>
@@ -41,16 +73,21 @@ export default {
   /* 左右均分 */
   justify-content: space-around;
 
+  // 左侧盒子
   .left-box {
     width: 478px;
     height: 550px;
     background: rgba(245, 245, 245, 1);
+    // 设置样式 把表单间隙空出来
+    padding-right: 41px;
+    box-sizing: border-box;
 
     .title-box {
       display: flex;
       align-items: center;
       margin-top: 44px;
       margin-left: 48px;
+      margin-bottom: 27px;
       .logo {
         width: 22px;
         height: 17px;
