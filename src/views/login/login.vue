@@ -49,10 +49,10 @@
             <el-link type="primary">隐私条款</el-link>
           </el-checkbox>
         </el-form-item>
-
+        <!-- 底部按钮 -->
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">登录</el-button>
-          <el-button>取消</el-button>
+          <el-button type="primary" class="my-btn">登录</el-button>
+          <el-button type="primary" class="my-btn">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -131,6 +131,13 @@ export default {
     .loginCode {
       width: 100%;
       height: 40.8px;
+    }
+
+    // 按钮
+    .my-btn {
+      width: 100%;
+      margin-bottom: 26px;
+      margin-left: 0px;
     }
   }
   // 协议区域
