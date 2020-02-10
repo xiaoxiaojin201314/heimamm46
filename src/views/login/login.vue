@@ -37,6 +37,7 @@
               ></el-input>
             </el-col>
             <el-col :span="7" class="code-col">
+              <!-- 登录验证码 -->
               <img class="loginCode" src="../../assets/login_captcha.png" alt />
             </el-col>
           </el-row>
@@ -76,19 +77,23 @@ export default {
   data() {
     return {
       loginForm: {
+        //手机
         phone: "",
+        //密码
         passwprd: "",
+        //验证码
         loginCode: "",
+        //是否勾选
         isChecked: false
       },
       rules: {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+          { min: 6, max: 12, message:'密码的长度为6-12位', trigger: "blur" }
         ],
         loginCode: [
           { required: true, message: "验证码不能为空", trigger: "blur" },
-          { min: 4, max: 4, message: "长度为 4 个字符", trigger: "blur" }
+          { min: 4, max: 4, message: "验证码的长度为4位", trigger: "blur" }
         ]
       }
     };
@@ -163,6 +168,11 @@ export default {
         font-size: 21px;
         margin-left: 12px;
       }
+    }
+    //登录验证码
+    .login-code{
+      width: 100%;
+      height: 40.8PX;
     }
 
     // 验证码图片
