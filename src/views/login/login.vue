@@ -65,15 +65,19 @@
 
 <script>
 // 导入 注册对话框
-import registerDialog from './components/registerDialog.vue';
+import registerDialog from "./components/registerDialog.vue";
 // 定义校验函数 - 手机
-import { checkPhone }  from '@/utils/validator.js'
+import { checkPhone } from "@/utils/validator.js";
+//导入登录接口
+import { login } from '@/api/login.js';
+//导入token的工具函数
+import { setToken } from '@/utils/token.js'
 
 export default {
   // 组件的名字
   name: "login",
   // 注册组件
-  components:{
+  components: {
     registerDialog //省略了属性值
   },
   data() {
@@ -86,45 +90,70 @@ export default {
         //验证码
         loginCode: "",
         //是否勾选
-        isChecked: false,
-       
+        isChecked: false
       },
       rules: {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 6, max: 12, message:'密码的长度为6-12位', trigger: "blur" }
+          { min: 6, max: 12, message: "密码的长度为6-12位", trigger: "blur" }
         ],
         loginCode: [
           { required: true, message: "验证码不能为空", trigger: "blur" },
           { min: 4, max: 4, message: "验证码的长度为4位", trigger: "blur" }
         ],
-          phone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'change' }
-        ],
+        phone: [
+          { required: true, message: "手机号不能为空", trigger: "blur" },
+          { validator: checkPhone, trigger: "change" }
+        ]
       },
-       //验证码地址
-        codeURL:process.env.VUE_APP_URL+'/captcha?type=login'
+      //验证码地址
+      codeURL: process.env.VUE_APP_URL + "/captcha?type=login"
     };
   },
   methods: {
     //刷新图片验证码
-    changeCode(){
-      this.codeURL=process.env.VUE_APP_URL+'/captcha?type=login&t='+Date.now()
+    changeCode() {
+      this.codeURL =
+        process.env.VUE_APP_URL + "/captcha?type=login&t=" + Date.now();
     },
     // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message.success("验证成功!");
+          // 验证是否勾选
+          if (this.loginForm.isChecked != true) {
+            return this.$message.warning('请勾选用户协议')
+          }
+          //验证通过
+          login({
+            phone:this.loginForm.phone,
+            password:this.loginForm.password,
+            code:this.loginForm.loginCode
+          }).then(res=>{
+           // window.console.log(res);
+            //正确
+            if (res.data.code===200) {
+              this.$message.success('恭喜你,登录成功')
+              //服务器返回了token
+              //将token保存到localStorage
+              //window.localStorage.setItem('heimammToken',res.data.data.token)
+              setToken(res.data.data.token);
+              //跳转到首页
+              this.$router.push('/index')
+            }else if(res.data.code===202){
+              //错误
+              this.$message.error(res.data.message)
+            }
+          })
         } else {
+          //this.changeCode();
           this.$message.error("验证失败!");
           return false;
         }
       });
     },
-  // 显示注册对话框
-    showRegister(){
+    // 显示注册对话框
+    showRegister() {
       //this.$refs可以获取所有设置了ref属性的元素,包括组件
       //registerDialog和上面设置的属性要一致
       this.$refs.registerDialog.dialogFormVisible = true;
@@ -183,9 +212,9 @@ export default {
       }
     }
     //登录验证码
-    .login-code{
+    .login-code {
       width: 100%;
-      height: 40.8PX;
+      height: 40.8px;
     }
 
     // 验证码图片
