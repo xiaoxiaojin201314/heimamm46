@@ -2,8 +2,10 @@
 import Vue from 'vue';
 // 导入路由
 import VueRouter from 'vue-router';
-//导入login
+//导入组件login
 import login from '../views/login/login.vue'
+//导入组件index
+import index from '../views/index/index.vue'
 
 // 注册路由
 Vue.use(VueRouter);
@@ -16,6 +18,11 @@ const router = new VueRouter({
       //登陆
       path: '/login',
       component: login
+    },
+    {
+      //首页
+      path: '/index',
+      component: index
     }
   ]
 });
