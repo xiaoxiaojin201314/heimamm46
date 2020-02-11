@@ -14,7 +14,7 @@
       <!-- 表单 -->
       <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="43px">
         <!-- 手机号 -->
-        <el-form-item>
+        <el-form-item prop="phone">
           <el-input prefix-icon="el-icon-user" placeholder="请输入手机号" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <!-- 密码 -->
@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="7" class="code-col" :offset="1">
               <!-- 登录验证码 -->
-              <img class="loginCode" src="../../assets/login_captcha.png" alt />
+              <img @click="changeCode" class="loginCode" :src="codeURL" alt />
             </el-col>
           </el-row>
         </el-form-item>
@@ -66,6 +66,8 @@
 <script>
 // 导入 注册对话框
 import registerDialog from './components/registerDialog.vue';
+// 定义校验函数 - 手机
+import { checkPhone }  from '@/utils/validator.js'
 
 export default {
   // 组件的名字
@@ -84,7 +86,8 @@ export default {
         //验证码
         loginCode: "",
         //是否勾选
-        isChecked: false
+        isChecked: false,
+       
       },
       rules: {
         password: [
@@ -94,11 +97,21 @@ export default {
         loginCode: [
           { required: true, message: "验证码不能为空", trigger: "blur" },
           { min: 4, max: 4, message: "验证码的长度为4位", trigger: "blur" }
-        ]
-      }
+        ],
+          phone: [
+          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'change' }
+        ],
+      },
+       //验证码地址
+        codeURL:process.env.VUE_APP_URL+'/captcha?type=login'
     };
   },
   methods: {
+    //刷新图片验证码
+    changeCode(){
+      this.codeURL=process.env.VUE_APP_URL+'/captcha?type=login&t='+Date.now()
+    },
     // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

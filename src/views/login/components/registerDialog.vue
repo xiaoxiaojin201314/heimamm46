@@ -67,30 +67,9 @@
 // 导入 接口
 import { sendsms,register } from '../../../api/register.js';
 
-// 定义校验函数 - 邮箱
-const checkEmail = (rule, value, callback) => {
-  // 获取数据 value
-  // 定义正则表达式 定义了一个正则对象
-  const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-  // 校验方法 test 方法 是正则对象
-  if (reg.test(value) == true) {
-    callback();
-  } else {
-    callback(new Error('邮箱的格式不正确'));
-  }
-};
-// 定义校验函数 - 手机
-const checkPhone = (rule, value, callback) => {
-  // 获取数据 value
-  // 定义正则表达式 定义了一个正则对象
-  const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
-  // 校验方法 test 方法 是正则对象
-  if (reg.test(value) == true) {
-    callback();
-  } else {
-    callback(new Error('手机格式不正确'));
-  }
-};
+//导入表单校验函数
+import { checkPhone,checkEmail }  from '@/utils/validator.js'
+
 
 export default {
   data() {
@@ -125,8 +104,8 @@ export default {
           { min: 6, max: 12, message: '密码长度为 6 到 12 位', trigger: 'change' }
         ],
         phone: [
-          { required: true, message: '手机不能为空', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'change' }
         ],
         email: [
           { required: true, message: '邮箱不能为空', trigger: 'blur' },
