@@ -16,6 +16,7 @@
     <el-container>
       <!-- 侧边栏 -->
       <el-aside width="auto" class="my-aside">
+        <!-- 导航菜单 -->
         <el-menu router :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo">
           <el-menu-item index="/index/chart">
             <!-- 图标 -->
@@ -50,9 +51,9 @@
 
 <script>
 // 导入接口
-import { info, logout } from '@/api/index.js';
+import {  logout } from '@/api/index.js';
 // 导入 token函数
-import { removeToken,getToken } from '@/utils/token.js';
+import { removeToken } from '@/utils/token.js';
 export default {
   name: 'index',
   data() {
@@ -65,22 +66,31 @@ export default {
       isCollapse: false
     };
   },
-  //生命周期钩子
-  beforeCreate() {
-      //如果没有值
-      if (getToken() == undefined) {
-          this.$message.warning('未登录,请先登录!');
-          //打回登录页
-          this.$router.push('/login')
-      }
-  },
-  created() {
-    info().then(res => {
-      this.username = res.data.data.username;
-      // 服务器返回的头像地址不完整，需要进行拼接
-      this.userIcon = process.env.VUE_APP_URL + '/' + res.data.data.avatar;
-    });
-  },
+  // 生命周期钩子
+  // beforeCreate() {
+  //   // 如果没有值
+  //   if (getToken() == undefined) {
+  //     // 提示用户
+  //     this.$message.warning('小老弟，请先登录');
+  //     // 打回登录页
+  //     this.$router.push('/login');
+  //   }
+  // },
+  // created() {
+  //   info().then(res => {
+  //     // 如果token有问题 提示 删除，并返回
+  //     if (res.data.code === 206) {
+  //       this.$message.warning('登录状态有误，请重新登录');
+  //       removeToken();
+  //       this.$router.push('/login');
+  //     } else if (res.data.code === 200) {
+  //       // 如果没问题
+  //       this.username = res.data.data.username;
+  //       // 服务器返回的头像地址不完整，需要进行拼接
+  //       this.userIcon = process.env.VUE_APP_URL + '/' + res.data.data.avatar;
+  //     }
+  //   });
+  // },
   methods: {
     logout() {
       this.$confirm('确定要退出吗?', '友情提示', {
