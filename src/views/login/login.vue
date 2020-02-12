@@ -146,11 +146,13 @@ export default {
             }
           })
         } else {
-          //this.changeCode();
+          this.changeCode();
           this.$message.error("验证失败!");
           return false;
         }
       });
+      
+      
     },
     // 显示注册对话框
     showRegister() {

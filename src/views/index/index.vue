@@ -74,9 +74,9 @@ export default {
   },
   methods: {
     logout() {
-      this.$confirm('你确定要离开我们网站', '友情提示', {
-        confirmButtonText: '狠心离开',
-        cancelButtonText: '继续看看',
+      this.$confirm('确定要退出吗?', '友情提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         // type: 'error'
         type: 'success'
       })
