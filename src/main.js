@@ -6,6 +6,8 @@ import router from './router/index'
 import ElementUI from 'element-ui'
 // 导入 Element-ui的样式
 import 'element-ui/lib/theme-chalk/index.css'
+//导入仓库
+import store from './store/index.js'
 //// 注册 Element-ui
 Vue.use(ElementUI)
 //导入全局样式
@@ -16,6 +18,8 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
-  //挂载到vue实例上
-  router
+  //挂载到vue实例上,路由
+  router,
+  //挂载到vue实例上,仓库
+  store
 }).$mount('#app')
