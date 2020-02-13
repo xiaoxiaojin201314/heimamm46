@@ -8,8 +8,8 @@
         <span>黑马面面</span>
       </div>
       <div class="right">
-        <img :src="userIcon" alt="" />
-        <span class="name">{{ username }},您好</span>
+        <img :src="$store.state.userIcon" alt="" />
+        <span class="name">{{ $store.state.username }},您好</span>
         <el-button type="primary" @click="logout">退出</el-button>
       </div>
     </el-header>
@@ -106,6 +106,10 @@ export default {
             if (res.data.code === 200) {
               // 移除token
               removeToken();
+              //移出vuex中的头像
+              this.$store.commit('changeIcon','');
+              //移出vuex中的名字
+              this.$store.commit('changeName','');
               // 去登录页
               this.$router.push('/login');
             }

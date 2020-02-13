@@ -13,9 +13,11 @@ const store = new Vuex.Store({
         username:''
     },
     mutations:{
+        //修改头像
         changeIcon(state,newIcon){
             state.userIcon = newIcon;
         },
+        //修改名字
         changeName(state,newName){
             state.username = newName
         },

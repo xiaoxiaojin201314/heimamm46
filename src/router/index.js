@@ -17,6 +17,9 @@ import { info } from '@/api/index.js';
 // 按需导入 Element-ui的弹框
 import { Message } from 'element-ui';
 
+// 导入仓库
+import store from '@/store/index.js'
+
 // 注册一下 use
 Vue.use(VueRouter);
 
@@ -40,18 +43,19 @@ import subject from '@/views/index/subject/subject.vue';
 const router = new VueRouter({
   // 路由规则
   routes: [
-    //空地址重定向
+    // 空地址的重定向
     {
       path: '/',
       redirect: '/login'
+      // component:login,
     },
     // 登录
     {
       path: '/login',
       // path:"/",
       component: login,
-      meta:{
-        title:'登录',
+      meta: {
+        title: '登录'
       }
     },
     // 首页
@@ -59,8 +63,8 @@ const router = new VueRouter({
       path: '/index',
       // path:"/",
       component: index,
-      meta:{
-        title:'首页',
+      meta: {
+        title: '首页'
       },
       // 嵌套路由
       children: [
@@ -68,40 +72,40 @@ const router = new VueRouter({
           // 路径不需要写 /  被解析为 /index/chart
           path: 'chart',
           component: chart,
-          meta:{
-            title:'数据概览'
+          meta: {
+            title: '数据概览'
           }
         },
         {
           // 路径不需要写 /  会被解析为 /index/user
           path: 'user',
           component: user,
-          meta:{
-            title:'用户列表'
+          meta: {
+            title: '用户列表'
           }
         },
         {
           // 路径不需要写 /  会被解析为 /index/question
           path: 'question',
           component: question,
-          meta:{
-            title:'题库列表'
+          meta: {
+            title: '题库列表'
           }
         },
         {
           // 路径不需要写 /  会被解析为 /index/enterprise
           path: 'enterprise',
           component: enterprise,
-          meta:{
-            title:'企业列表'
+          meta: {
+            title: '企业列表'
           }
         },
         {
           // 路径不需要写 /  会被解析为 /index/subject
           path: 'subject',
           component: subject,
-          meta:{
-            title:'学科列表'
+          meta: {
+            title: '学科列表'
           }
         }
       ]
@@ -114,54 +118,54 @@ const whitePaths = ['/login'];
 
 // 导航守卫 beforeEach 进入之前
 router.beforeEach((to, from, next) => {
-  // router.beforeEach((next)=>{
   // 开启进度条
   NProgress.start();
-  // 访问的页面是哪个
-  // window.console.log(to.path)
-  // 向后走
-  // if (to.path != '/login') {
-  // 白名单判断 不存在 转小写
-  if (whitePaths.includes(to.path.toLocaleLowerCase()) != true) {
-    // 需要判断登录状态
-    // token非空
-    if (getToken() == undefined) {
-      // 为空
-      // this 不是 vue示例
-      Message.warning('登录状态有误，请检查');
+  // 白名单
+  if (whitePaths.includes(to.path.toLocaleLowerCase()) !== true) {
+    // 判断token 是否存在
+    // 不存在 提示用户，并打回登录页 缓存不存在 是null 要么用== 要么改为 null
+    if (getToken() === null) {
+      Message.warning('请先登录');
       NProgress.done();
-      // 返回登录页
       next('/login');
     } else {
-      // token不为空 token正确判断
+      // token 存在
+      // 对错判断
       info().then(res => {
-        // window.console.log(res)
+        window.console.log(res);
         if (res.data.code === 206) {
-          // 提示用户
-          Message.warning('登录状态有误，请检查');
-          NProgress.done();
-          // 删除token
+          // token有问题
           removeToken();
-          // 返回登录页
+          Message.warning('登录状态有误，请重新登录');
+          NProgress.done();
           next('/login');
         } else if (res.data.code === 200) {
-          // 获取成功
-          // 放走
+          // 处理用户的信息 用户的名字
+          const username = res.data.data.username
+          // 处理用户的信息 用户的头像
+          const userIcon = process.env.VUE_APP_URL+"/"+res.data.data.avatar
+          // 调用仓库的方法
+          store.commit("changeIcon",userIcon);
+          store.commit("changeName",username);
+          
+          // 正确的
           next();
         }
       });
     }
   } else {
-    // 是登录页
+    // 白名单中的页面
+    // 放走
     next();
   }
 });
 // 导航守卫 afterEach 进入完成之后
 // router.afterEach((to,from)=>{
 router.afterEach(to => {
+  // window.console.log(to)
   // 关闭进度条
   NProgress.done();
-  //修改标题
+  // 修改标题
   window.document.title = to.meta.title;
 });
 
