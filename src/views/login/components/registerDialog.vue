@@ -28,7 +28,7 @@
       <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
         <el-input show-password v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="图形码" :label-width="formLabelWidth" prop="code">
+      <el-form-item label="图形码" prop="code" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
             <el-input v-model="form.code" autocomplete="off"></el-input>
@@ -39,7 +39,7 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="验证码" :label-width="formLabelWidth" prop="rcode">
+      <el-form-item label="验证码" prop="rcode" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
             <el-input v-model="form.rcode" autocomplete="off"></el-input>
@@ -47,7 +47,7 @@
           <el-col :span="7" :offset="1">
             <!-- 点击获取 短信验证码 -->
             <el-button :disabled="delay != 0" @click="getSMS">
-              {{ delay == 0 ? '点击获取验证码' : `重新加载${delay}s` }}
+              {{ delay == 0 ? '点击获取验证码' : `还有${delay}秒继续获取` }}
             </el-button>
           </el-col>
         </el-row>
@@ -65,11 +65,12 @@
 // import axios from 'axios';
 
 // 导入 接口
-import { sendsms,register } from '../../../api/register.js';
+// import { sendsms } from '../../../api/register.js';
+// 使用@关键字简化编码
+import { sendsms, register } from '@/api/register.js';
 
-//导入表单校验函数
-import { checkPhone,checkEmail }  from '@/utils/validator.js'
-
+// 导入表单的校验函数
+import {checkPhone , checkEmail} from '@/utils/validator.js'
 
 export default {
   data() {
@@ -88,13 +89,14 @@ export default {
         email: '',
         // 图片验证码
         code: '',
-        //用户头像地址
-        avatar:'',
-        //短信验证码
-        rcode:''
+        // 用户的头像地址
+        avatar: '',
+        // 短信验证码
+        rcode: ''
       },
       // 校验规则
       rules: {
+        avatar: [{ required: true, message: '用户头像不能为空', trigger: 'change' }],
         username: [
           { required: true, message: '用户名不能为空', trigger: 'blur' },
           { min: 6, max: 12, message: '用户名长度为 6 到 12 位', trigger: 'change' }
@@ -104,15 +106,12 @@ export default {
           { min: 6, max: 12, message: '密码长度为 6 到 12 位', trigger: 'change' }
         ],
         phone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'change' }
+          { required: true, message: '手机不能为空', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
         ],
         email: [
           { required: true, message: '邮箱不能为空', trigger: 'blur' },
           { validator: checkEmail, trigger: 'blur' }
-        ],
-        avatar: [
-          { required: true, message: '用户头像不能为空', trigger: 'blur' },
         ]
       },
       // 左侧的文本宽度
@@ -129,43 +128,50 @@ export default {
   },
   // 方法
   methods: {
-    //关闭表单
+    // 关闭表单
     cancel(formName) {
-      window.console.log(formName);
-      this.dialogFormVisible=false;
-       // this.$refs[formName].resetFields();
+      window.console.log(formName)
+      // 关闭表单
+      this.dialogFormVisible = false;
+      // this.$refs[formName].resetFields();
       // 人为的清空
       // this.imageUrl = '';
     },
-    //表单提交方法
+    // 表单的提交方法
+    // 提交表单
     submitForm(formName) {
+      // 等同于 this.$refs['registerForm'] 相当于获取到了Element-ui的表单
+      // this.$refs['registerForm'] 等同于 this.$refs.registerForm
+      // validate这个方法是Element-ui的表单的方法
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 验证正确,调用接口
+          // 验证正确
+          // 调用接口
           register({
-            username:this.form.username,
-            password:this.form.password,
-            phone:this.form.phone,
-            email:this.form.email,
-            avatar:this.form.avatar,
-            rcode:this.form.rcode,
-          }).then(res=>{
-            // window.console.log(res);
-            if (res.data.code===200) {
-              this.$message.success('恭喜你,注册成功');
-              //关闭对话框
-              this.dialogFormVisible=false;
-              //清空数据
+            username: this.form.username,
+            password: this.form.password,
+            phone: this.form.phone,
+            email: this.form.email,
+            avatar: this.form.avatar,
+            rcode: this.form.rcode
+          }).then(res => {
+            // window.console.log(res)
+            if (res.data.code === 200) {
+              this.$message.success('恭喜你，注册成功啦');
+              // 关闭对话框
+              this.dialogFormVisible = false;
+              // 清空数据
               this.$refs[formName].resetFields();
-              //人为清空图片
-              this.imageUrl='';
-            }else if (res.data.code===201) {
-              //服务器返回提示信息弹出
-              this.$message.error(res.data.message)
-            }  
+              // 人为的清空 图片
+              this.imageUrl = '';
+            } else if (res.data.code === 201) {
+              // 服务器返回的提示信息 弹出来
+              this.$message.error(res.data.message);
+            }
           });
         } else {
-          this.$message.error("验证失败!");
+          this.$message.error('验证失败');
+          // 验证错误
           return false;
         }
       });
@@ -175,20 +181,19 @@ export default {
       // window.console.log(res);
       // URL.createObjectURL 生成的是本地的临时路径，刷新就没用了
       this.imageUrl = URL.createObjectURL(file.raw);
-      //保存服务器返回的图片地址
-      this.form.avatar = res.data.file_path
-      //表单中头像字段校验
+      // 保存 服务器返回的图片地址
+      this.form.avatar = res.data.file_path;
+      // 表单中 头像字段的校验
       this.$refs.registerForm.validateField('avatar');
-
     },
     // 上传之前
     beforeAvatarUpload(file) {
-      // window.console.log(file);  
+      // window.console.log(file);
       const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/gif';
       // 1024*1024 1mb
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error('上传头像只能是图片!');
+        this.$message.error('上传头像只能是图片格式');
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
@@ -200,13 +205,15 @@ export default {
       // 手机号校验
       const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
       if (reg.test(this.form.phone) != true) {
-        this.$message.error('手机号格式不对,请重新输入')
-        return
+        this.$message.error('手机号格式不对哦，请重新输入');
+        return;
       }
-      //图片验证码校验
+      // 图片验证码的校验
       if (this.form.code.length != 4) {
-        //工作中可能会看到的这种代码
-        return this.$message.error('图片验证码长度不够,请重新输入')
+        // this.$message.error('图片验证码的长度不对哦，请检查')
+        // return
+        // 工作中 可能会看到 这样的代码
+        return this.$message.error('图片验证码的长度不对哦，请检查');
       }
       // 如果为0开启倒计时
       if (this.delay == 0) {
@@ -220,16 +227,6 @@ export default {
           }
         }, 100);
         // 调用接口
-        // axios({
-        //   url: process.env.VUE_APP_URL + '/sendsms',
-        //   method: 'post',
-        //   data: {
-        //     code: this.form.code,
-        //     phone: this.form.phone
-        //   },
-        //   // 是否跨域携带cookie 默认是false
-        //   withCredentials: true
-        // })
         sendsms({
           code: this.form.code,
           phone: this.form.phone
