@@ -4,16 +4,16 @@
     <el-card class="top-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="学科编号">
-          <el-input class="short" v-model="formInline.user" placeholder="审批人"></el-input>
+          <el-input class="short" v-model="formInline.user" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="学科名称">
-          <el-input class="normal" v-model="formInline.user" placeholder="审批人"></el-input>
+          <el-input class="normal" v-model="formInline.user" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="创建者">
-          <el-input class="short" v-model="formInline.user" placeholder="审批人"></el-input>
+          <el-input class="short" v-model="formInline.user" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select class="normal" v-model="formInline.region" placeholder="活动区域">
+          <el-select class="normal" v-model="formInline.region" placeholder="请选择状态">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
@@ -33,8 +33,8 @@
         <el-table-column prop="date" label="学科编号"> </el-table-column>
         <el-table-column prop="date" label="学科名称"> </el-table-column>
         <el-table-column prop="date" label="简称"> </el-table-column>
-        <el-table-column prop="date" label="创建者"> </el-table-column>
-        <el-table-column prop="name" label="创建日期"> </el-table-column>
+        <el-table-column prop="name" label="创建者"> </el-table-column>
+        <el-table-column prop="date" label="创建日期"> </el-table-column>
         <el-table-column prop="address" label="状态"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="niubi">
