@@ -69,6 +69,9 @@
     </el-card>
     <!-- 新增对话框 -->
     <subjectAdd ref="subjectAdd"></subjectAdd>
+    <!-- 编辑对话框 -->
+    <subjectEdit ref="subjectEdit"></subjectEdit>
+
   </div>
 </template>
 
@@ -77,11 +80,14 @@
 import { subjectList, subjectStatus } from '@/api/subject.js';
 // 导入新增对话框
 import subjectAdd from './components/subjectAdd.vue';
+//导入编辑对话框
+import subjectEdit from './components/subjectEdit';
 export default {
   name: 'subject',
   // 注册组件
   components: {
-    subjectAdd
+    subjectAdd,
+    subjectEdit
   },
   // 生命周期钩子
   created() {
@@ -170,8 +176,23 @@ export default {
     },
     // 编辑
     handleEdit(index, row) {
-      window.console.log(index, row);
-      row.name = '王二花';
+      // window.console.log(index, row);
+      // row.name = '王二花';
+      //弹出编辑框
+      this.$refs.subjectEdit.dialogFormVisible = true;
+      //设置数据 这一行的数据
+      //this.$refs.subjectEdit.form = row;
+
+      //创建一个完全一样的数据进行复制
+      //返回的是字符串(基本数据类型)
+      //const rowStr = JSON.stringift(row);
+      //根据字符串转回对象 string->对象
+      //this.$refs.subjectEdit.form = JSON.parse(rowStr);
+
+      //一行搞定 obj->string->新的obj
+      this.$refs.subjectEdit.form = JSON.parse(JSON.stringify(row));
+
+
     },
     // 删除
     handleDelete(index, row) {
