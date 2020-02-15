@@ -67,7 +67,7 @@ export function subjectList(params) {
 export function subjectAdd(data) {
     return subjectRequest({
         url:'/subject/add',
-        method:'get',
+        method:'post',
         data
     });
 }
