@@ -20,8 +20,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="searchSubject">查询</el-button>
-          <el-button @click="clearSearch">清除</el-button>
+          <el-button @click="searchSubject" type="primary">查询</el-button>
+          <el-button @click="clearSeach">清除</el-button>
           <el-button @click="$refs.subjectAdd.dialogFormVisible = true" icon="el-icon-plus" type="primary">新增学科</el-button>
         </el-form-item>
       </el-form>
@@ -71,17 +71,16 @@
     <subjectAdd ref="subjectAdd"></subjectAdd>
     <!-- 编辑对话框 -->
     <subjectEdit ref="subjectEdit"></subjectEdit>
-
   </div>
 </template>
 
 <script>
 // 导入接口
-import { subjectList, subjectStatus } from '@/api/subject.js';
+import { subjectList, subjectStatus, subjectRemove } from '@/api/subject.js';
 // 导入新增对话框
 import subjectAdd from './components/subjectAdd.vue';
-//导入编辑对话框
-import subjectEdit from './components/subjectEdit';
+// 导入 编辑对话框
+import subjectEdit from './components/subjectEdit.vue';
 export default {
   name: 'subject',
   // 注册组件
@@ -98,37 +97,37 @@ export default {
     return {
       // 顶部表单的数据
       formInline: {
-        //学科名
-        name:'',
-        //学科编号
-        rid:'',
-        //状态
-        status:'',
-        //创建者
-        username:''
+        // 学科名
+        name: '',
+        // 学科编号
+        rid: '',
+        // 状态
+        status: '',
+        // 创建者名
+        username: ''
       },
       // 底部表格的数据
       tableData: [
-        // {
-        //   date: '2016-05-02',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1518 弄'
-        // },
-        // {
-        //   date: '2016-05-04',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1517 弄'
-        // },
-        // {
-        //   date: '2016-05-01',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1519 弄'
-        // },
-        // {
-        //   date: '2016-05-03',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1516 弄'
-        // }
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
       ],
       // 分页器的数据
       // 页码
@@ -140,63 +139,84 @@ export default {
     };
   },
   methods: {
-    //清空搜索
-    clearSearch(){
-      //清空表单
-      // resetFields是element-ul提供的
+    // 清空搜索
+    clearSeach() {
+      // 清空表单
+      // resetFields Element-ui提供的
+      // 和点语法等价
+      // this.$refs['formInline'].resetFields()
       this.$refs.formInline.resetFields();
-      //返回第一页
-      this.index=1;
-      //重新获取数据,内部已经实现了筛选条件的合并
+      // 返回第一页
+      this.index = 1;
+      // 重新获取数据 内部已经实现了筛选条件的合并
       this.getData();
     },
-    //学科搜索
-    searchSubject(){
-      //跳转到第一页
-      this.index=1;
-      //调用getData方法
+    // 学科搜索
+    searchSubject() {
+      // 跳转到第一页
+      this.index = 1;
+      // 调用getData即可
       this.getData();
     },
     // 获取数据的方法
     getData() {
       subjectList({
-        //页码
-        page:this.index,
-        //页容量
-        limit:this.size,
-        //合并筛选条件 ,展开运算符
+        // 页码
+        page: this.index,
+        // 页容量
+        limit: this.size,
+        // 合并筛选条件 展开运算符
         ...this.formInline
       }).then(res => {
         window.console.log(res);
         // 设置给table
         this.tableData = res.data.items;
-        //总条数保存起来
-        this.total=res.data.pagination.total;
+        // 总条数保存起来
+        this.total = res.data.pagination.total;
       });
     },
-    // 编辑
+    // 编辑学科模块 - 修改02 -保存修改
     handleEdit(index, row) {
       // window.console.log(index, row);
       // row.name = '王二花';
-      //弹出编辑框
+      // 弹出编辑框
       this.$refs.subjectEdit.dialogFormVisible = true;
-      //设置数据 这一行的数据
-      //this.$refs.subjectEdit.form = row;
+      // 设置数据 这一行的数据
+      // this.$refs.subjectEdit.form = row;
 
-      //创建一个完全一样的数据进行复制
-      //返回的是字符串(基本数据类型)
-      //const rowStr = JSON.stringift(row);
-      //根据字符串转回对象 string->对象
-      //this.$refs.subjectEdit.form = JSON.parse(rowStr);
+      // 创建一个完全一样的 数据 进行复制
+      // 返回的是 字符串（基本数据类型）
+      // const rowStr = JSON.stringify(row);
+      // 根据字符串转回对象  string->对象
+      // this.$refs.subjectEdit.form = JSON.parse(rowStr)
 
-      //一行搞定 obj->string->新的obj
+      // 一行搞定 obj->string->新的obj
       this.$refs.subjectEdit.form = JSON.parse(JSON.stringify(row));
-
-
     },
     // 删除
     handleDelete(index, row) {
-      window.console.log(index, row);
+      // window.console.log(index, row);
+      const id = row.id;
+      this.$confirm('此操作将永久删除该学科, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 确定
+          subjectRemove({
+            id
+          }).then(res=>{
+            // window.console.log(res)
+            if(res.code===200){
+              this.$message.success('删除成功')
+              this.getData()
+            }
+          })
+        })
+        .catch(() => {
+          
+        });
     },
     // 状态切换
     handleNotAllow(index, row) {
@@ -215,19 +235,19 @@ export default {
     // 页容量改变
     sizeChange(val) {
       // window.console.log(`每页 ${val} 条`);
-      //返回第一页
-      this.index=1;
-      //设置新的页容量
-      this.size=val;
-      //重新获取数据
+      // 返回第一页
+      this.index = 1;
+      // 设置新的页容量
+      this.size = val;
+      // 重新获取数据
       this.getData();
     },
     // 页码改变
     currentChange(val) {
       window.console.log(`当前页: ${val}`);
-      //保存页码
-      this.index=val;
-      //重新调用即可
+      // 保存页码
+      this.index = val;
+      // 重新调用即可
       this.getData();
     }
   }
