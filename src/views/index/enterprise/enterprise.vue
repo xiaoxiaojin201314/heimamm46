@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select class="normal" v-model="formInline.status" placeholder="状态">
-            <el-option label="所有" value=""></el-option>
+            <el-option label="所有" value></el-option>
             <el-option label="禁用" value="0"></el-option>
             <el-option label="启用" value="1"></el-option>
           </el-select>
@@ -22,7 +22,11 @@
         <el-form-item>
           <el-button @click="searchEnterprise" type="primary">搜索</el-button>
           <el-button @click="clearSeach">清除</el-button>
-          <el-button @click="$refs.enterpriseAdd.dialogFormVisible = true" icon="el-icon-plus" type="primary">新增企业</el-button>
+          <el-button
+            @click="$refs.enterpriseAdd.dialogFormVisible = true"
+            icon="el-icon-plus"
+            type="primary"
+          >新增企业</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -30,29 +34,30 @@
     <el-card class="bottom-card">
       <!-- 表格 -->
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="index" width="50" label="序号"> </el-table-column>
-        <el-table-column prop="eid" label="企业编号"> </el-table-column>
-        <el-table-column prop="name" label="企业名称"> </el-table-column>
-        <el-table-column prop="username" label="创建者"> </el-table-column>
+        <el-table-column type="index" width="50" label="序号"></el-table-column>
+        <el-table-column prop="eid" label="企业编号"></el-table-column>
+        <el-table-column prop="name" label="企业名称"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
         <el-table-column prop="create_time" label="创建日期">
           <template slot-scope="scope">
             <!-- 使用全局过滤器 -->
-              {{ scope.row.create_time | formatTime }}
+            {{ scope.row.create_time | formatTime }}
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-              <span v-if="scope.row.status===1">启用</span>
-              <span v-else style="color:red">禁用</span>
+            <span v-if="scope.row.status===1">启用</span>
+            <span v-else style="color:red">禁用</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="niubi">
             <el-button type="text" size="mini" @click="handleEdit(niubi.$index, niubi.row)">编辑</el-button>
             <!-- 启用，禁用 -->
-            <el-button type="text" @click="handleNotAllow(niubi.$index, niubi.row)">
-              {{ niubi.row.status===1?'禁用':"启用" }}
-            </el-button>
+            <el-button
+              type="text"
+              @click="handleNotAllow(niubi.$index, niubi.row)"
+            >{{ niubi.row.status===1?'禁用':"启用" }}</el-button>
             <el-button size="mini" type="text" @click="handleDelete(niubi.$index, niubi.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -68,8 +73,7 @@
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </el-card>
     <!-- 新增对话框 -->
     <enterpriseAdd ref="enterpriseAdd"></enterpriseAdd>
@@ -78,45 +82,45 @@
 
 <script>
 // 导入接口
-import {enterpriseList} from '@/api/enterprise.js'
+import { enterpriseList } from "@/api/enterprise.js";
 // 导入新增组件
-import enterpriseAdd from './components/enterpriseAdd.vue'
+import enterpriseAdd from "./components/enterpriseAdd.vue";
 export default {
-  name: 'enterprise',
+  name: "enterprise",
   data() {
     return {
       // 顶部表单的数据
       formInline: {
         // 企业名
-        name: '',
+        name: "",
         // 企业编号
-        eid: '',
+        eid: "",
         // 状态
-        status: '',
+        status: "",
         // 创建者名
-        username: ''
+        username: ""
       },
       // 底部表格的数据
       tableData: [
         {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄"
         },
         {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄"
         },
         {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄"
         },
         {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄"
         }
       ],
       // 分页器的数据
@@ -129,31 +133,66 @@ export default {
     };
   },
   // 注册组件
-  components:{
+  components: {
     enterpriseAdd
   },
   created() {
-   //获取数据
-   this.getData();
+    //获取数据
+    this.getData();
   },
   methods: {
+    // 页容量改变
+    sizeChange(val) {
+      // window.console.log(`每页 ${val} 条`);
+      // 返回第一页
+      this.index = 1;
+      // 设置新的页容量
+      this.size = val;
+      // 重新获取数据
+      this.getData();
+    },
+    // 页码改变
+    currentChange(val) {
+      window.console.log(`当前页: ${val}`);
+      // 保存页码
+      this.index = val;
+      // 重新调用即可
+      this.getData();
+    },
+    //清除搜索
+    clearSeach() {
+      //清空表单
+      this.$refs.formInline.resetFields();
+      //返回第一页
+      this.index = 1;
+      //重新获取数据
+      this.getData();
+    },
     //搜索企业
-    searchEnterprise(){
+    searchEnterprise() {
+      //跳转到第一页
+      this.index = 1;
       //调用数据获取逻辑
-      this.getData()
+      this.getData();
     },
     //获取逻辑
-    getData(){
-       enterpriseList({
-         //把筛选的条件合并
-         ...this.formInline
-       }).then(res=>{
-      // window.console.log(res)
-      // 保存数据
-      this.tableData =res.data.items;
-    })
+    getData() {
+      enterpriseList({
+        //页码
+        page: this.index,
+        //页容量
+        limit: this.size,
+        //把筛选的条件合并
+        ...this.formInline
+      }).then(res => {
+        // window.console.log(res)
+        // 保存数据
+        this.tableData = res.data.items;
+        //保存总条数
+        this.total = res.data.pagination.total;
+      });
     }
-  },
+  }
 };
 </script>
 
