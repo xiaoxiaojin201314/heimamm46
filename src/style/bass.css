@@ -1,5 +1,17 @@
-html,body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 全局替换掉element-ui的对话框样式 */
+.el-dialog__header {
+  background: linear-gradient(to right, #00c6f9, #1495fb);
+}
+.el-dialog__title {
+  color: white;
+}
+.el-dialog__headerbtn .el-dialog__close {
+  color: white;
 }
