@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select class="normal" v-model="formInline.status" placeholder="状态">
-            <el-option label="所有" value=""></el-option>
+            <el-option label="所有" value></el-option>
             <el-option label="禁用" value="0"></el-option>
             <el-option label="启用" value="1"></el-option>
           </el-select>
@@ -22,7 +22,11 @@
         <el-form-item>
           <el-button @click="searchSubject" type="primary">查询</el-button>
           <el-button @click="clearSeach">清除</el-button>
-          <el-button @click="$refs.subjectAdd.dialogFormVisible = true" icon="el-icon-plus" type="primary">新增学科</el-button>
+          <el-button
+            @click="$refs.subjectAdd.dialogFormVisible = true"
+            icon="el-icon-plus"
+            type="primary"
+          >新增学科</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -30,12 +34,17 @@
     <el-card class="bottom-card">
       <!-- 表格 -->
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="index" width="50" label="索引"> </el-table-column>
-        <el-table-column prop="rid" label="学科编号"> </el-table-column>
-        <el-table-column prop="name" label="学科名称"> </el-table-column>
-        <el-table-column prop="short_name" label="简称"> </el-table-column>
-        <el-table-column prop="username" label="创建者"> </el-table-column>
-        <el-table-column prop="create_time" label="创建日期"> </el-table-column>
+        <el-table-column type="index" width="50" label="索引"></el-table-column>
+        <el-table-column prop="rid" label="学科编号"></el-table-column>
+        <el-table-column prop="name" label="学科名称"></el-table-column>
+        <el-table-column prop="short_name" label="简称"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column prop="create_time" label="创建日期">
+           <template slot-scope="scope">
+            {{scope.row.create_time | formatTime}}
+          </template>
+        </el-table-column>
+         
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 1">启用</span>
@@ -46,9 +55,10 @@
           <template slot-scope="niubi">
             <el-button type="text" size="mini" @click="handleEdit(niubi.$index, niubi.row)">编辑</el-button>
             <!-- 启用，禁用 -->
-            <el-button type="text" @click="handleNotAllow(niubi.$index, niubi.row)">
-              {{ niubi.row.status === 1 ? '禁用' : '启用' }}
-            </el-button>
+            <el-button
+              type="text"
+              @click="handleNotAllow(niubi.$index, niubi.row)"
+            >{{ niubi.row.status === 1 ? '禁用' : '启用' }}</el-button>
             <el-button size="mini" type="text" @click="handleDelete(niubi.$index, niubi.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -64,8 +74,7 @@
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </el-card>
     <!-- 新增对话框 -->
     <subjectAdd ref="subjectAdd"></subjectAdd>
@@ -76,13 +85,13 @@
 
 <script>
 // 导入接口
-import { subjectList, subjectStatus, subjectRemove } from '@/api/subject.js';
+import { subjectList, subjectStatus, subjectRemove } from "@/api/subject.js";
 // 导入新增对话框
-import subjectAdd from './components/subjectAdd.vue';
+import subjectAdd from "./components/subjectAdd.vue";
 // 导入 编辑对话框
-import subjectEdit from './components/subjectEdit.vue';
+import subjectEdit from "./components/subjectEdit.vue";
 export default {
-  name: 'subject',
+  name: "subject",
   // 注册组件
   components: {
     subjectAdd,
@@ -98,35 +107,35 @@ export default {
       // 顶部表单的数据
       formInline: {
         // 学科名
-        name: '',
+        name: "",
         // 学科编号
-        rid: '',
+        rid: "",
         // 状态
-        status: '',
+        status: "",
         // 创建者名
-        username: ''
+        username: ""
       },
       // 底部表格的数据
       tableData: [
         {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄"
         },
         {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄"
         },
         {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄"
         },
         {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄"
         }
       ],
       // 分页器的数据
@@ -190,33 +199,47 @@ export default {
       // 根据字符串转回对象  string->对象
       // this.$refs.subjectEdit.form = JSON.parse(rowStr)
 
-      // 一行搞定 obj->string->新的obj
-      this.$refs.subjectEdit.form = JSON.parse(JSON.stringify(row));
+      //如果id改变了,说明是重新编辑在赋值
+      if (row.id != this.$refs.subjectEdit.form.id) {
+        // 一行搞定 obj->string->新的obj
+        this.$refs.subjectEdit.form = JSON.parse(JSON.stringify(row));
+      } else {
+        //相等时不需要执行逻辑代码
+      }
     },
     // 删除
     handleDelete(index, row) {
       // window.console.log(index, row);
       const id = row.id;
-      this.$confirm('此操作将永久删除该学科, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该学科, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           // 确定
           subjectRemove({
             id
-          }).then(res=>{
+          }).then(res => {
             // window.console.log(res)
-            if(res.code===200){
-              this.$message.success('删除成功')
-              this.getData()
+            if (res.code === 200) {
+              this.$message.success("删除成功");
+              //增加最后一页的判断
+              if (this.tableData.length == 1) {
+                //服务器的已经被删除
+                //继续获取这一页的数据会拿不到
+                //页码--
+                this.index--;
+                //如果已经是第一页
+                if (this.index <= 0) {
+                  this.index = 1;
+                }
+              }
+              this.getData();
             }
-          })
+          });
         })
-        .catch(() => {
-          
-        });
+        .catch(() => {});
     },
     // 状态切换
     handleNotAllow(index, row) {
@@ -226,7 +249,7 @@ export default {
       }).then(res => {
         // window.console.log(res)
         if (res.code === 200) {
-          this.$message.success('状态修改成功！');
+          this.$message.success("状态修改成功！");
           // 重新获取数据
           this.getData();
         }
