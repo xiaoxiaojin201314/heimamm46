@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="searchSubject" type="primary">搜索</el-button>
+          <el-button @click="searchEnterprise" type="primary">搜索</el-button>
           <el-button @click="clearSeach">清除</el-button>
           <el-button @click="$refs.enterpriseAdd.dialogFormVisible = true" icon="el-icon-plus" type="primary">新增企业</el-button>
         </el-form-item>
@@ -87,10 +87,10 @@ export default {
     return {
       // 顶部表单的数据
       formInline: {
-        // 学科名
+        // 企业名
         name: '',
-        // 学科编号
-        rid: '',
+        // 企业编号
+        eid: '',
         // 状态
         status: '',
         // 创建者名
@@ -133,11 +133,26 @@ export default {
     enterpriseAdd
   },
   created() {
-    enterpriseList().then(res=>{
+   //获取数据
+   this.getData();
+  },
+  methods: {
+    //搜索企业
+    searchEnterprise(){
+      //调用数据获取逻辑
+      this.getData()
+    },
+    //获取逻辑
+    getData(){
+       enterpriseList({
+         //把筛选的条件合并
+         ...this.formInline
+       }).then(res=>{
       // window.console.log(res)
       // 保存数据
       this.tableData =res.data.items;
     })
+    }
   },
 };
 </script>
