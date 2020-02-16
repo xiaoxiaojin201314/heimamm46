@@ -56,7 +56,7 @@
             <!-- 启用，禁用 -->
             <el-button
               type="text"
-              @click="handleNotAllow(niubi.$index, niubi.row)"
+              @click="changeStatus(niubi.$index, niubi.row)"
             >{{ niubi.row.status===1?'禁用':"启用" }}</el-button>
             <el-button size="mini" type="text" @click="handleDelete(niubi.$index, niubi.row)">删除</el-button>
           </template>
@@ -82,7 +82,7 @@
 
 <script>
 // 导入接口
-import { enterpriseList,enterpriseRemove } from "@/api/enterprise.js";
+import { enterpriseList,enterpriseRemove,enterpriseStatus } from "@/api/enterprise.js";
 // 导入新增组件
 import enterpriseAdd from "./components/enterpriseAdd.vue";
 export default {
@@ -141,6 +141,20 @@ export default {
     this.getData();
   },
   methods: {
+    //状态切换
+    changeStatus(index, row) {
+      // window.console.log(index, row);
+      enterpriseStatus({
+        id: row.id
+      }).then(res => {
+        // window.console.log(res)
+        if (res.code === 200) {
+          this.$message.success("状态修改成功！");
+          // 重新获取数据
+          this.getData();
+        }
+      });
+    },
     // 删除
     handleDelete(index, row) {
       // window.console.log(index, row);
