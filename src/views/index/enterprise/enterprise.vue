@@ -82,7 +82,7 @@
 
 <script>
 // 导入接口
-import { enterpriseList } from "@/api/enterprise.js";
+import { enterpriseList,enterpriseRemove } from "@/api/enterprise.js";
 // 导入新增组件
 import enterpriseAdd from "./components/enterpriseAdd.vue";
 export default {
@@ -141,6 +141,41 @@ export default {
     this.getData();
   },
   methods: {
+    // 删除
+    handleDelete(index, row) {
+      // window.console.log(index, row);
+      const id = row.id;
+      this.$confirm("此操作将永久删除该学科, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 确定
+          enterpriseRemove({
+            id
+          }).then(res => {
+            // window.console.log(res)
+            if (res.code === 200) {
+              this.$message.success("删除成功");
+              //增加最后一页的判断
+              if (this.tableData.length == 1) {
+                //服务器的已经被删除
+                //继续获取这一页的数据会拿不到
+                //页码--
+                this.index--;
+                //如果已经是第一页
+                if (this.index <= 0) {
+                  this.index = 1;
+                }
+              }
+              this.getData();
+            }
+          });
+        })
+        .catch(() => {});
+    },
+
     // 页容量改变
     sizeChange(val) {
       // window.console.log(`每页 ${val} 条`);
