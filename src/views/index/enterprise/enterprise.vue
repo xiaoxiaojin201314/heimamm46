@@ -77,6 +77,8 @@
     </el-card>
     <!-- 新增对话框 -->
     <enterpriseAdd ref="enterpriseAdd"></enterpriseAdd>
+    <!-- 编辑对话框 -->
+    <enterpriseEdit ref="enterpriseEdit"></enterpriseEdit>
   </div>
 </template>
 
@@ -85,6 +87,8 @@
 import { enterpriseList,enterpriseRemove,enterpriseStatus } from "@/api/enterprise.js";
 // 导入新增组件
 import enterpriseAdd from "./components/enterpriseAdd.vue";
+//导入编辑组件 
+import enterpriseEdit from "./components/enterpriseEdit.vue";
 export default {
   name: "enterprise",
   data() {
@@ -134,13 +138,36 @@ export default {
   },
   // 注册组件
   components: {
-    enterpriseAdd
+    enterpriseAdd,
+    enterpriseEdit,
   },
   created() {
     //获取数据
     this.getData();
   },
   methods: {
+     handleEdit(index, row) {
+      // window.console.log(index, row);
+      // row.name = '王二花';
+      // 弹出编辑框
+      this.$refs.enterpriseEdit.dialogFormVisible = true;
+      // 设置数据 这一行的数据
+      // this.$refs.enterpriseEdit.form = row;
+
+      // 创建一个完全一样的 数据 进行复制
+      // 返回的是 字符串（基本数据类型）
+      // const rowStr = JSON.stringify(row);
+      // 根据字符串转回对象  string->对象
+      // this.$refs.enterpriseEdit.form = JSON.parse(rowStr)
+
+      //如果id改变了,说明是重新编辑在赋值
+      if (row.id != this.$refs.enterpriseEdit.form.id) {
+        // 一行搞定 obj->string->新的obj
+        this.$refs.enterpriseEdit.form = JSON.parse(JSON.stringify(row));
+      } else {
+        //相等时不需要执行逻辑代码
+      }
+    },
     //状态切换
     changeStatus(index, row) {
       // window.console.log(index, row);
@@ -171,18 +198,14 @@ export default {
           }).then(res => {
             // window.console.log(res)
             if (res.code === 200) {
-              this.$message.success("删除成功");
-              //增加最后一页的判断
-              if (this.tableData.length == 1) {
-                //服务器的已经被删除
-                //继续获取这一页的数据会拿不到
-                //页码--
-                this.index--;
-                //如果已经是第一页
-                if (this.index <= 0) {
-                  this.index = 1;
+              //页码异常处理
+              if (this.tableData.length==1) {
+                //判断页码
+                if(this.index>1){
+                  this.index--;
                 }
               }
+              //重新获取数据
               this.getData();
             }
           });
