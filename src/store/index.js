@@ -10,7 +10,9 @@ const store = new Vuex.Store({
         //用户头像
         userIcon:'',
         //用户名
-        username:''
+        username:'',
+        //用户的角色
+        role:''
     },
     mutations:{
         //修改头像
@@ -21,6 +23,10 @@ const store = new Vuex.Store({
         changeName(state,newName){
             state.username = newName
         },
+        //修改角色
+        changeRole(state,newRole){
+            state.role=newRole
+        }
     }
 }) 
 //暴露出去
