@@ -61,6 +61,44 @@ export default {
     };
   },
   methods: {
+    //显示对话框
+    show(editData){
+      //使用公共对话框
+      this.dialogFormVisible=true;
+      //判断是否传递了数据
+      if(editData==undefined){
+        //没有传递,新增数据
+        //为对话框设置nextTick
+        this.$nextTick(()=>{
+          //修改公共对话框,标记字段,改为false,新增状态
+          this.isEdit = false;
+          //直接设置一个新的对象
+          this.form={
+            // 企业编号
+            eid: '',
+            // 企业名称
+            name: '',
+            // 简称
+            short_name: '',
+            // 简介
+            intro: '',
+            // 备注
+            remark: ''
+          };
+          //清空表单中的数据
+          // this.$refs.enterpriseDialog.resetFields()
+        });
+      } else{
+        // 传递了数据为编辑逻辑
+        // 为对话框注册nextTick
+        this.$nextTick(()=>{
+          //修改公共对话框标记字段
+          this.isEdit=true;
+          //设置数据新增的副本
+          this.form=editData;
+        })
+      }
+    },
     // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {

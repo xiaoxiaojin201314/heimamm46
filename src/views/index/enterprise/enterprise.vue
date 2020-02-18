@@ -155,40 +155,13 @@ export default {
   methods: {
     //进入新增状态
     showAdd(){
-      //使用公共对话框
-      this.$refs.enterpriseDialog.dialogFormVisible=true;
-      //使用公共对话框的标记字段,改为false新增状态
-      this.$refs.enterpriseDialog.isEdit=false;
-      //清空表单数据
-      this.$refs.enterpriseDialog.$refs.enterpriseDialog.resetFields()
+      //不传递数据是新增
+      this.$refs.enterpriseDialog.show();
     },
+    //进入编辑状态
      handleEdit(index, row) {
-      // window.console.log(index, row);
-      // row.name = '王二花';
-      // 弹出编辑框
-      //this.$refs.enterpriseEdit.dialogFormVisible = true;
-      // 设置数据 这一行的数据
-      // this.$refs.enterpriseEdit.form = row;
-
-      // 创建一个完全一样的 数据 进行复制
-      // 返回的是 字符串（基本数据类型）
-      // const rowStr = JSON.stringify(row);
-      // 根据字符串转回对象  string->对象
-      // this.$refs.enterpriseEdit.form = JSON.parse(rowStr)
-      //使用公共对话框
-      this.$refs.enterpriseDialog.dialogFormVisible=true;
-      //使用公共对话框标记字段
-      this.$refs.enterpriseDialog.isEdit= true;
-
-      //设置数据新的副本
-      this.$refs.enterpriseDialog.form=JSON.parse(JSON.stringify(row));
-      //如果id改变了,说明是重新编辑在赋值
-      // if (row.id != this.$refs.enterpriseEdit.form.id) {
-      //   // 一行搞定 obj->string->新的obj
-      //   this.$refs.enterpriseEdit.form = JSON.parse(JSON.stringify(row));
-      // } else {
-      //   //相等时不需要执行逻辑代码
-      // }
+       //弹出编辑框
+       this.$refs.enterpriseDialog.show(JSON.parse(JSON.stringify(row)));
     },
     //状态切换
     changeStatus(index, row) {
