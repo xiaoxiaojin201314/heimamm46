@@ -11,14 +11,14 @@
         <span class="sub-title">用户登录</span>
       </div>
       <!-- 表单 -->
-      <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="43px">
+      <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="43px" status-icon>
         <!-- 手机号 -->
         <el-form-item prop="phone">
           <el-input prefix-icon="el-icon-user" placeholder="请输入手机号" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
-          <el-input prefix-icon="el-icon-lock" placeholder="请输入密码" v-model="loginForm.password"></el-input>
+          <el-input prefix-icon="el-icon-lock" placeholder="请输入密码" v-model="loginForm.password" show-password></el-input>
         </el-form-item>
         <!-- 验证码 -->
         <el-form-item prop="loginCode">

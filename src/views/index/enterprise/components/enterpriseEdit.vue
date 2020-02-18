@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="enterprise-add" width="600px" center title="编辑企业" :visible.sync="dialogFormVisible">
+  <el-dialog class="enterprise-add" width="600px" center title="修改企业" :visible.sync="dialogFormVisible">
     <el-form :model="form" ref="enterpriseEdit" :rules="rules">
       <el-form-item prop="eid" label="企业编号" :label-width="formLabelWidth">
         <el-input v-model="form.eid" autocomplete="off"></el-input>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-//导入企业编辑方法
+//导入企业修改方法
 import {enterpriseEdit} from '@/api/enterprise.js';
 export default {
   name: 'enterpriseEdit',
