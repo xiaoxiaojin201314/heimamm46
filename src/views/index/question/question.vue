@@ -4,13 +4,8 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="学科">
           <el-select v-model="formInline.subject" placeholder="请选择学科">
-            <el-option label="所有学科" value></el-option>
-            <el-option
-              v-for="(item, index) in subjectList"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
+            <el-option label="所有学科" value=""></el-option>
+            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="阶段">
@@ -21,13 +16,8 @@
         </el-form-item>
         <el-form-item label="企业">
           <el-select v-model="formInline.enterprise" placeholder="请选择企业">
-            <el-option label="所有企业" value></el-option>
-            <el-option
-              v-for="(item, index) in enterpriseList"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
+            <el-option label="所有企业" value=""></el-option>
+            <el-option v-for="(item, index) in enterpriseList" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题型">
@@ -53,10 +43,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
-          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"> </el-date-picker>
         </el-form-item>
+        <br />
         <el-form-item class="title-item" label="标题">
-          <el-input v-model="formInline.user" placeholder></el-input>
+          <el-input v-model="formInline.user" placeholder="选择日期"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary">搜索</el-button>
@@ -65,23 +56,44 @@
         </el-form-item>
       </el-form>
     </el-card>
-
     <!-- 底部的卡片 -->
     <el-card class="bottom-card">
       <!-- table -->
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column type="index" label="序号" width="180"></el-table-column>
-        <el-table-column prop="date" label="题目"></el-table-column>
-        <el-table-column prop="name" label="学科.阶段"></el-table-column>
-        <el-table-column prop="address" label="题型"></el-table-column>
-        <el-table-column prop="address" label="企业"></el-table-column>
-        <el-table-column prop="address" label="创建者"></el-table-column>
-        <el-table-column prop="address" label="状态"></el-table-column>
-        <el-table-column prop="address" label="访问量"></el-table-column>
-        <el-table-column prop="address" label="操作">
-          <template>
+        <!-- type=index 可以实现索引 -->
+        <el-table-column type="index" label="序号" width="180"> </el-table-column>
+        <el-table-column  label="题目">
+          <template slot-scope="scope" >
+            <span v-html="scope.row.title"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="学科.阶段">
+          <template slot-scope="scope">
+              {{ scope.row.subject_name }}
+              .
+              <!-- 对象.属性  对象[1] -->
+              {{ {1:'初级',2:'中级',3:'高级'}[scope.row.step] }}
+          </template>
+        </el-table-column>
+        <el-table-column label="题型"> 
+          <template slot-scope="scope"> 
+              {{ {1:'单选',2:'多选',3:'简答'}[scope.row.type] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="enterprise_name" label="企业"> </el-table-column>
+        <el-table-column prop="username" label="创建者"> </el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+              {{ scope.row.status===1?'启用':'禁用' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="reads" label="访问量"> </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">启用</el-button>
+            <el-button type="text">
+              {{scope.row.status===1?'禁用':'启用'}}
+            </el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -96,32 +108,35 @@
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      ></el-pagination>
+      >
+      </el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
-//导入学科接口
-import { subjectList } from "@/api/subject.js";
-//导入企业接口
-import { enterpriseList } from "@/api/enterprise.js";
+// 导入学科 接口
+import { subjectList } from '@/api/subject.js';
+// 导入企业 接口
+import { enterpriseList } from '@/api/enterprise.js';
+// 导入题库列表 接口
+import {questionList} from '@/api/question.js'
 export default {
-  name: "question",
+  name: 'question',
   data() {
     return {
       formInline: {
-        user: "",
-        region: "",
-        value1: "",
-        //学科id
-        subject: "",
-        //企业id
-        enterprise: ""
+        user: '',
+        region: '',
+        value1: '',
+        // 学科id
+        subject: '',
+        // 企业id
+        enterprise: ''
       },
-      //学科数据
+      // 学科数据
       subjectList: [],
-      //企业数据
+      // 企业数据
       enterpriseList: [],
       // 分页器相关
       // 页容量
@@ -131,33 +146,39 @@ export default {
       // 总条数
       total: 0,
       // 表格的数据
-      tableData: []
+      tableData:[]
     };
   },
   methods: {
-    methods: {
-      // 页容量改变
-      sizeChange(val) {
-        window.console.log(`每页 ${val} 条`);
-      },
-      // 页面改变
-      currentChange(val) {
-        window.console.log(`当前页: ${val}`);
-      }
+    // 页容量改变
+    sizeChange(val) {
+      window.console.log(`每页 ${val} 条`);
+    },
+    // 页面改变
+    currentChange(val) {
+      window.console.log(`当前页: ${val}`);
     }
   },
-  //获取数据
+  // 获取数据
   created() {
-    //获取学科数据
+    // 获取学科数据
     subjectList().then(res => {
-      // window.console.log(res);
+      // window.console.log(res)
       this.subjectList = res.data.items;
     });
-    //获取企业数据
+    // 获取企业数据
     enterpriseList().then(res => {
-      // window.console.log(res);
+      // window.console.log(res)
       this.enterpriseList = res.data.items;
     });
+    // 获取题库数据 
+    questionList().then(res=>{
+      // window.console.log(res)
+      // 赋值给table
+      this.tableData = res.data.items;
+      // 总条数
+      this.total = res.data.pagination.total;
+    })
   }
 };
 </script>
@@ -180,7 +201,7 @@ export default {
     padding-left: 30px;
     padding-right: 30px;
   }
-  //选择日期的宽度
+  // 日期选择器的宽度
   .el-date-editor.el-input {
     width: 150px;
   }
