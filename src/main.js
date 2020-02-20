@@ -13,6 +13,18 @@ Vue.use(ElementUI)
 //导入全局样式
 import './style/bass.css'
 
+//导入学科下拉框
+import subjectSel from './views/index/question/components/subjectSel.vue'
+//导入企业下拉框
+import enterpriseSel from './views/index/question/components/enterpriseSel.vue'
+
+
+//注册企业和学科下拉框
+//参数一:名字
+//参数二:组件
+Vue.component('enterpriseSel',enterpriseSel);
+Vue.component('subjectSel',subjectSel);
+
 
 Vue.config.productionTip = false
 

@@ -3,7 +3,11 @@
     <el-card class="top-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="学科">
-          <subjectSel v-model="formInline.subject" />
+          <subjectSel 
+          v-bind:value="formInline.subject" 
+          @input="v => (formInline.subject = v)"
+           />
+          <!-- <subjectSel v-model="formInline.subject" /> -->
         </el-form-item>
         <el-form-item label="阶段">
           <el-select v-model="formInline.region" placeholder="请选择阶段">
@@ -12,6 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="企业">
+          <!-- <enterpriseSel v-bind:value="formInline.enterprise" @input="v => (formInline.enterprise = v)" /> -->
           <enterpriseSel v-model="formInline.enterprise" />
         </el-form-item>
         <el-form-item label="题型">
@@ -37,16 +42,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
-          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"> </el-date-picker>
         </el-form-item>
         <br />
         <el-form-item class="title-item" label="标题">
-          <el-input v-model="formInline.user" placeholder="选择日期"></el-input>
+          <el-input v-model="formInline.user" placeholder=""></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary">搜索</el-button>
           <el-button>清除</el-button>
-          <el-button @click="$refs.questionAdd.dialogFormVisible=true" type="primary" icon="el-icon-plus">新增试题</el-button>
+          <el-button type="primary" @click="$refs.questionAdd.dialogFormVisible = true" icon="el-icon-plus">新增试题</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -55,8 +60,8 @@
       <!-- table -->
       <el-table :data="tableData" border style="width: 100%">
         <!-- type=index 可以实现索引 -->
-        <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column label="题目">
+        <el-table-column type="index" label="序号"> </el-table-column>
+        <el-table-column label="题目" width="200">
           <template slot-scope="scope">
             <span v-html="scope.row.title"></span>
           </template>
@@ -66,22 +71,28 @@
             {{ scope.row.subject_name }}
             .
             <!-- 对象.属性  对象[1] -->
-            {{ {1:'初级',2:'中级',3:'高级'}[scope.row.step] }}
+            {{ { 1: '初级', 2: '中级', 3: '高级' }[scope.row.step] }}
           </template>
         </el-table-column>
         <el-table-column label="题型">
-          <template slot-scope="scope">{{ {1:'单选',2:'多选',3:'简答'}[scope.row.type] }}</template>
+          <template slot-scope="scope">
+            {{ { 1: '单选', 2: '多选', 3: '简答' }[scope.row.type] }}
+          </template>
         </el-table-column>
-        <el-table-column prop="enterprise_name" label="企业"></el-table-column>
-        <el-table-column prop="username" label="创建者"></el-table-column>
+        <el-table-column prop="enterprise_name" label="企业"> </el-table-column>
+        <el-table-column prop="username" label="创建者"> </el-table-column>
         <el-table-column label="状态">
-          <template slot-scope="scope">{{ scope.row.status===1?'启用':'禁用' }}</template>
+          <template slot-scope="scope">
+            {{ scope.row.status === 1 ? '启用' : '禁用' }}
+          </template>
         </el-table-column>
-        <el-table-column prop="reads" label="访问量"></el-table-column>
+        <el-table-column prop="reads" label="访问量"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">{{scope.row.status===1?'禁用':'启用'}}</el-button>
+            <el-button type="text">
+              {{ scope.row.status === 1 ? '禁用' : '启用' }}
+            </el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -96,7 +107,8 @@
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      ></el-pagination>
+      >
+      </el-pagination>
     </el-card>
     <!-- 新增对话框 -->
     <questionAdd ref="questionAdd"></questionAdd>
@@ -104,35 +116,28 @@
 </template>
 
 <script>
-// 导入学科 接口
-import { subjectList } from "@/api/subject.js";
-// 导入企业 接口
-import { enterpriseList } from "@/api/enterprise.js";
 // 导入题库列表 接口
-import { questionList } from "@/api/question.js";
-//导入学科下拉框
-import subjectSel from "./components/subjectSel.vue";
-//导入企业下拉框
-import enterpriseSel from './components/enterpriseSel.vue';
-//导入新增对话框
+import { questionList } from '@/api/question.js';
+// 导入 学科下拉框
+// import subjectSel from './components/subjectSel.vue';
+// 导入 企业下拉框组件
+// import enterpriseSel from './components/enterpriseSel.vue';
+// 导入 新增对话框
 import questionAdd from './components/questionAdd.vue';
 export default {
-  name: "question",
+  name: 'question',
   data() {
     return {
       formInline: {
-        user: "",
-        region: "",
-        value1: "",
+        user: '',
+        region: '',
+        value1: '',
         // 学科id
-        subject: "",
+        subject: '',
         // 企业id
-        enterprise: ""
+        enterprise: ''
       },
-      // 学科数据
-      subjectList: [],
-      // 企业数据
-      enterpriseList: [],
+
       // 分页器相关
       // 页容量
       size: 2,
@@ -144,10 +149,10 @@ export default {
       tableData: []
     };
   },
-  //注册组件
+  // 组件注册
   components: {
-    subjectSel,
-    enterpriseSel,
+    // subjectSel,
+    // enterpriseSel,
     questionAdd
   },
   methods: {
@@ -162,16 +167,6 @@ export default {
   },
   // 获取数据
   created() {
-    // 获取学科数据
-    subjectList().then(res => {
-      // window.console.log(res)
-      this.subjectList = res.data.items;
-    });
-    // 获取企业数据
-    enterpriseList().then(res => {
-      // window.console.log(res)
-      this.enterpriseList = res.data.items;
-    });
     // 获取题库数据
     questionList().then(res => {
       // window.console.log(res)

@@ -1,14 +1,50 @@
 <template>
-  <el-dialog class="question-add" title="新增题库" fullscreen :visible.sync="dialogFormVisible">
+  <el-dialog class="question-add" fullscreen title="新增题库" :visible.sync="dialogFormVisible">
     <el-form :model="form">
-      <el-form-item label="活动名称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-form-item label="学科" :label-width="formLabelWidth">
+        <subjectSel v-model="form.subject" />
       </el-form-item>
-      <el-form-item label="活动区域" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="阶段" :label-width="formLabelWidth">
+        <el-select v-model="form.step" placeholder="请选择阶段">
+          <el-option label="初级" :value="1"></el-option>
+          <el-option label="中级" :value="2"></el-option>
+          <el-option label="高级" :value="3"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="企业" :label-width="formLabelWidth">
+        <enterpriseSel v-model="form.enterprise" />
+      </el-form-item>
+      <el-form-item label="城市" :label-width="formLabelWidth">
+        <!-- <chinaArea v-bind:value="form.city" @input="v => (form.city = v)" /> -->
+        <chinaArea v-model="form.city" />
+      </el-form-item>
+      <el-form-item label="题型" :label-width="formLabelWidth">
+        <el-radio-group v-model="form.type">
+          <el-radio :label="1">单选</el-radio>
+          <el-radio :label="2">多选</el-radio>
+          <el-radio :label="3">简答</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="难度" :label-width="formLabelWidth">
+        <el-radio-group v-model="form.difficulty">
+          <el-radio :label="1">简单</el-radio>
+          <el-radio :label="2">一般</el-radio>
+          <el-radio :label="3">困难</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <!-- 分割线 -->
+      <el-divider></el-divider>
+      <!-- 富文本编辑器1 标题 -->
+      <el-form-item label="试题标题" :label-width="formLabelWidth">
+        <!-- <myEditor v-bind:value="form.title" @input="v => (form.title = v)" /> -->
+        <myEditor v-model="form.title" />
+      </el-form-item>
+      <!-- 分割线 -->
+      <el-divider></el-divider>
+      <!-- 富文本编辑器2 解析 -->
+      <el-form-item label="答案解析" :label-width="formLabelWidth">
+        <!-- <myEditor v-bind:value="form.answer_analyze" @input="v => (form.title = v)" /> -->
+        <myEditor v-model="form.answer_analyze" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -19,12 +55,36 @@
 </template>
 
 <script>
+// 导入抽取的省市区组件
+import chinaArea from "./chinaArea.vue";
+// 导入抽取的富文本编辑器
+import myEditor from "./myEditor.vue";
 export default {
+  // 注册组件
+  components: {
+    chinaArea,
+    myEditor
+  },
   data() {
     return {
       dialogFormVisible: false,
-      //表单数据
-      form: {},
+      // 表单的数据
+      form: {
+        // 阶段
+        step: "",
+        // 学科和企业
+        subject: "",
+        enterprise: "",
+        // 省市区
+        city: [],
+        // 题型 和难度
+        type: 1,
+        difficulty: 1,
+        // 富文本编辑器的数据 标题 答案解析(answer_analyze)
+        title: "我是一个标题",
+        answer_analyze: "默认的答案解析"
+      },
+
       formLabelWidth: "120px"
     };
   }
@@ -32,10 +92,18 @@ export default {
 </script>
 
 <style lang="less">
-    .qusetion-add {
-        .el-form{
-            width: 835px;
-            margin: 0 auto;
-        }
-    }
+.question-add {
+  .el-form {
+    width: 835px;
+    margin: 0 auto;
+  }
+  // 选择框宽度
+  .el-select {
+    width: 364px;
+  }
+  // 级联选择器的宽度
+  .el-cascader {
+    width: 364px;
+  }
+}
 </style>
