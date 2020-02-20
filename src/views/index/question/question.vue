@@ -3,10 +3,7 @@
     <el-card class="top-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="学科">
-          <el-select v-model="formInline.subject" placeholder="请选择学科">
-            <el-option label="所有学科" value=""></el-option>
-            <el-option v-for="(item, index) in subjectList" :key="index" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <subjectSel v-model="formInline.subject"/>
         </el-form-item>
         <el-form-item label="阶段">
           <el-select v-model="formInline.region" placeholder="请选择阶段">
@@ -61,7 +58,7 @@
       <!-- table -->
       <el-table :data="tableData" border style="width: 100%">
         <!-- type=index 可以实现索引 -->
-        <el-table-column type="index" label="序号" width="180"> </el-table-column>
+        <el-table-column type="index" label="序号"> </el-table-column>
         <el-table-column  label="题目">
           <template slot-scope="scope" >
             <span v-html="scope.row.title"></span>
@@ -120,7 +117,9 @@ import { subjectList } from '@/api/subject.js';
 // 导入企业 接口
 import { enterpriseList } from '@/api/enterprise.js';
 // 导入题库列表 接口
-import {questionList} from '@/api/question.js'
+import {questionList} from '@/api/question.js';
+//导入学科下拉框
+import subjectSel from './components/subjectSel.vue';
 export default {
   name: 'question',
   data() {
@@ -148,6 +147,10 @@ export default {
       // 表格的数据
       tableData:[]
     };
+  },
+  //注册组件
+  components:{
+    subjectSel
   },
   methods: {
     // 页容量改变
