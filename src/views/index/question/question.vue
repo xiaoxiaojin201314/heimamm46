@@ -3,7 +3,7 @@
     <el-card class="top-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="学科">
-          <subjectSel v-model="formInline.subject"/>
+          <subjectSel v-model="formInline.subject" />
         </el-form-item>
         <el-form-item label="阶段">
           <el-select v-model="formInline.region" placeholder="请选择阶段">
@@ -12,10 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="企业">
-          <el-select v-model="formInline.enterprise" placeholder="请选择企业">
-            <el-option label="所有企业" value=""></el-option>
-            <el-option v-for="(item, index) in enterpriseList" :key="index" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <enterpriseSel v-model="formInline.enterprise" />
         </el-form-item>
         <el-form-item label="题型">
           <el-select v-model="formInline.region" placeholder="请选择题型">
@@ -40,7 +37,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
-          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"> </el-date-picker>
+          <el-date-picker v-model="formInline.value1" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <br />
         <el-form-item class="title-item" label="标题">
@@ -58,39 +55,33 @@
       <!-- table -->
       <el-table :data="tableData" border style="width: 100%">
         <!-- type=index 可以实现索引 -->
-        <el-table-column type="index" label="序号"> </el-table-column>
-        <el-table-column  label="题目">
-          <template slot-scope="scope" >
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column label="题目">
+          <template slot-scope="scope">
             <span v-html="scope.row.title"></span>
           </template>
         </el-table-column>
         <el-table-column label="学科.阶段">
           <template slot-scope="scope">
-              {{ scope.row.subject_name }}
-              .
-              <!-- 对象.属性  对象[1] -->
-              {{ {1:'初级',2:'中级',3:'高级'}[scope.row.step] }}
+            {{ scope.row.subject_name }}
+            .
+            <!-- 对象.属性  对象[1] -->
+            {{ {1:'初级',2:'中级',3:'高级'}[scope.row.step] }}
           </template>
         </el-table-column>
-        <el-table-column label="题型"> 
-          <template slot-scope="scope"> 
-              {{ {1:'单选',2:'多选',3:'简答'}[scope.row.type] }}
-          </template>
+        <el-table-column label="题型">
+          <template slot-scope="scope">{{ {1:'单选',2:'多选',3:'简答'}[scope.row.type] }}</template>
         </el-table-column>
-        <el-table-column prop="enterprise_name" label="企业"> </el-table-column>
-        <el-table-column prop="username" label="创建者"> </el-table-column>
+        <el-table-column prop="enterprise_name" label="企业"></el-table-column>
+        <el-table-column prop="username" label="创建者"></el-table-column>
         <el-table-column label="状态">
-          <template slot-scope="scope">
-              {{ scope.row.status===1?'启用':'禁用' }}
-          </template>
+          <template slot-scope="scope">{{ scope.row.status===1?'启用':'禁用' }}</template>
         </el-table-column>
-        <el-table-column prop="reads" label="访问量"> </el-table-column>
+        <el-table-column prop="reads" label="访问量"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text">编辑</el-button>
-            <el-button type="text">
-              {{scope.row.status===1?'禁用':'启用'}}
-            </el-button>
+            <el-button type="text">{{scope.row.status===1?'禁用':'启用'}}</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -105,33 +96,34 @@
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
 // 导入学科 接口
-import { subjectList } from '@/api/subject.js';
+import { subjectList } from "@/api/subject.js";
 // 导入企业 接口
-import { enterpriseList } from '@/api/enterprise.js';
+import { enterpriseList } from "@/api/enterprise.js";
 // 导入题库列表 接口
-import {questionList} from '@/api/question.js';
+import { questionList } from "@/api/question.js";
 //导入学科下拉框
-import subjectSel from './components/subjectSel.vue';
+import subjectSel from "./components/subjectSel.vue";
+//导入企业下拉框
+import enterpriseSel from './components/enterpriseSel'
 export default {
-  name: 'question',
+  name: "question",
   data() {
     return {
       formInline: {
-        user: '',
-        region: '',
-        value1: '',
+        user: "",
+        region: "",
+        value1: "",
         // 学科id
-        subject: '',
+        subject: "",
         // 企业id
-        enterprise: ''
+        enterprise: ""
       },
       // 学科数据
       subjectList: [],
@@ -145,12 +137,13 @@ export default {
       // 总条数
       total: 0,
       // 表格的数据
-      tableData:[]
+      tableData: []
     };
   },
   //注册组件
-  components:{
-    subjectSel
+  components: {
+    subjectSel,
+    enterpriseSel
   },
   methods: {
     // 页容量改变
@@ -174,14 +167,14 @@ export default {
       // window.console.log(res)
       this.enterpriseList = res.data.items;
     });
-    // 获取题库数据 
-    questionList().then(res=>{
+    // 获取题库数据
+    questionList().then(res => {
       // window.console.log(res)
       // 赋值给table
       this.tableData = res.data.items;
       // 总条数
       this.total = res.data.pagination.total;
-    })
+    });
   }
 };
 </script>
