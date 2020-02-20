@@ -46,7 +46,7 @@
         <el-form-item>
           <el-button type="primary">搜索</el-button>
           <el-button>清除</el-button>
-          <el-button type="primary" icon="el-icon-plus">新增试题</el-button>
+          <el-button @click="$refs.questionAdd.dialogFormVisible=true" type="primary" icon="el-icon-plus">新增试题</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -98,6 +98,8 @@
         :total="total"
       ></el-pagination>
     </el-card>
+    <!-- 新增对话框 -->
+    <questionAdd ref="questionAdd"></questionAdd>
   </div>
 </template>
 
@@ -111,7 +113,9 @@ import { questionList } from "@/api/question.js";
 //导入学科下拉框
 import subjectSel from "./components/subjectSel.vue";
 //导入企业下拉框
-import enterpriseSel from './components/enterpriseSel'
+import enterpriseSel from './components/enterpriseSel.vue';
+//导入新增对话框
+import questionAdd from './components/questionAdd.vue';
 export default {
   name: "question",
   data() {
@@ -143,7 +147,8 @@ export default {
   //注册组件
   components: {
     subjectSel,
-    enterpriseSel
+    enterpriseSel,
+    questionAdd
   },
   methods: {
     // 页容量改变
